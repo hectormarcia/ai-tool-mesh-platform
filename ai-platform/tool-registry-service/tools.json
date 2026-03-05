@@ -1,0 +1,54 @@
+{
+  "tools": [
+    {
+      "name": "json_validate",
+      "description": "Validate a JSON payload against a JSON Schema (Draft 2020-12).",
+      "base_url": "http://json-fixer:8010",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/validate",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "payload": {},
+              "schema": { "type": "object" }
+            },
+            "required": ["payload", "schema"]
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "valid": { "type": "boolean" },
+              "errors": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["valid", "errors"]
+          }
+        }
+      ],
+      "auth": { "type": "bearer", "env": "JSON_FIXER_BEARER_TOKEN" }
+    },
+    {
+      "name": "json_autofix",
+      "description": "Fix a JSON payload to satisfy a JSON Schema using validate→fix→revalidate loop.",
+      "base_url": "http://json-fixer:8010",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/autofix"
+        }
+      ],
+      "auth": { "type": "bearer", "env": "JSON_FIXER_BEARER_TOKEN" }
+    },
+    {
+      "name": "sql_query",
+      "description": "Read-only SQL Server query tool (SELECT only) with row limits and timeouts.",
+      "base_url": "http://sql-tool:8020",
+      "endpoints": [
+        { "method": "POST", "path": "/query" },
+        { "method": "GET", "path": "/schema" }
+      ],
+      "auth": { "type": "bearer", "env": "SQL_TOOL_BEARER_TOKEN" }
+    }
+  ]
+}

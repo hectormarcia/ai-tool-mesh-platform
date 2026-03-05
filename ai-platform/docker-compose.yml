@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+
+  agent-api:
+    build: ./agent-api
+    container_name: agent-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Azure OpenAI
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT}
+      AZURE_OPENAI_MODEL: ${AZURE_OPENAI_MODEL}
+
+      # Agent API auth
+      API_BEARER_TOKEN: ${AGENT_API_BEARER_TOKEN}
+
+      # JSON fixer service
+      JSON_FIXER_BASE_URL: http://json-fixer:8010
+      JSON_FIXER_BEARER_TOKEN: ${JSON_FIXER_BEARER_TOKEN}
+
+      # SQL tool service
+      SQL_TOOL_BASE_URL: http://sql-tool:8020
+      SQL_TOOL_BEARER_TOKEN: ${SQL_TOOL_BEARER_TOKEN}
+
+    depends_on:
+      - json-fixer
+      - sql-tool
+
+
+  json-fixer:
+    build: ./json-fixer-service
+    container_name: json-fixer
+    ports:
+      - "8010:8010"
+    environment:
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT}
+      AZURE_OPENAI_MODEL: ${AZURE_OPENAI_MODEL}
+      TOOL_REGISTRY_URL: "http://tool-registry:8030"
+      API_BEARER_TOKEN: ${JSON_FIXER_BEARER_TOKEN}
+
+
+  sql-tool:
+    build: ./sql-tool-service
+    container_name: sql-tool
+    ports:
+      - "8020:8020"
+    environment:
+      DB_URL: ${DB_URL}
+      API_BEARER_TOKEN: ${SQL_TOOL_BEARER_TOKEN}
+      MAX_ROWS: 500
+      QUERY_TIMEOUT_SECONDS: 15
+
+  tool-registry:
+    build: ./tool-registry-service
+    container_name: tool-registry
+    ports:
+      - "8030:8030"
+    environment:
+      TOOLS_FILE: /app/tools.json    
+      
