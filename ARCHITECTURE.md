@@ -35,9 +35,11 @@ is a recommended enterprise architecture for AI systems.
          |                                     |
          v                                     v
 
-+----------------------+ +------------------------+ \| JSON Guardrail
++----------------------+ +------------------------+ 
+\| JSON Guardrail
 Tool \| \| SQL Tool \| \| (8010) \| \| (8020) \| \| validate/autofix \|
-\| query/schema \| +----------+-----------+ +-----------+------------+
+\| query/schema \| 
++----------+-----------+ +-----------+------------+
 \| \| v v Azure OpenAI SQL Server AdventureWorks
 
 ------------------------------------------------------------------------
