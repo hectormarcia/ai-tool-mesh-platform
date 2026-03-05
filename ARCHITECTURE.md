@@ -19,28 +19,31 @@ is a recommended enterprise architecture for AI systems.
 
 ## High-Level Architecture
 
-                +-----------------------+
-                | Tool Registry         |
-                | (8030)                |
-                +----------+------------+
-                           |
-                           v
-                +-----------------------+
-                | Agent API             |
-                | (8000)                |
-                | LangGraph ReAct Agent |
-                +----------+------------+
-                           |
-         +-----------------+-------------------+
-         |                                     |
-         v                                     v
+            +-----------------------+
+            | Tool Registry         |
+            | (8030)                |
+            +----------+------------+
+                       |
+                       v
+            +-----------------------+
+            | Agent API             |
+            | (8000)                |
+            | LangGraph ReAct Agent |
+            +----------+------------+
+                       |
+     +-----------------+-------------------+
+     |                                     |
+     v                                     v
 
-+----------------------+ +------------------------+ 
-\| JSON Guardrail
-Tool \| \| SQL Tool \| \| (8010) \| \| (8020) \| \| validate/autofix \|
-\| query/schema \| 
++----------------------+ +------------------------+
+| JSON Guardrail Tool | | SQL Tool |
+| (8010) | | (8020) |
+| validate/autofix | | query/schema |
 +----------+-----------+ +-----------+------------+
-\| \| v v Azure OpenAI SQL Server AdventureWorks
+| |
+v v
+Azure OpenAI SQL Server
+AdventureWorks
 
 ------------------------------------------------------------------------
 
